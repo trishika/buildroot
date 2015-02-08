@@ -1,0 +1,14 @@
+[Unit]
+Description = Raid data
+Requires=mdadm.service
+After=mdadm.service
+Before=nfs-server.service minidlnad.service
+
+[Mount]
+What = /dev/md0
+Where = /data
+Type = ext4
+Options=defaults,noatime,nodiratime,noauto
+
+[Install]
+WantedBy = multi-user.target

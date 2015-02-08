@@ -1,0 +1,9 @@
+[Unit]
+Description=ftpd server daemon
+
+[Service]
+ExecStart=/bin/tcpsvd -vE 0.0.0.0 21 ftpd /data/Videos/
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

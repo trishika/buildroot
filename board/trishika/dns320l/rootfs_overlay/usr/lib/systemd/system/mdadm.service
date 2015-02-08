@@ -1,0 +1,11 @@
+[Unit]
+Description=mdadm
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/mdadm --assemble --scan
+ExecStop=/usr/sbin/mdadm --wait-clean --scan
+
+[Install]
+WantedBy=multi-user.target

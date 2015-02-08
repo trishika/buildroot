@@ -1,0 +1,8 @@
+[Unit]
+Description=Fan control
+
+[Service]
+ExecStart=/usr/local/bin/fan-daemon.sh
+
+[Install]
+WantedBy=multi-user.target

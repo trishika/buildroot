@@ -1,0 +1,9 @@
+[Unit]
+Description=telnet server daemon
+
+[Service]
+ExecStart=/bin/busybox telnetd -F
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
