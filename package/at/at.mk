@@ -21,8 +21,20 @@ AT_CONF_OPTS = \
 	--with-daemon_groupname=root \
 	SENDMAIL=/usr/sbin/sendmail
 
+ifeq ($(BR2_PACKAGE_SYSTEMD),y)
+AT_CONF_OPTS += --with-systemdsystemunitdir=/usr/lib/systemd/system
+else
+AT_CONF_OPTS += --with-systemdsystemunitdir=no
+endif
+
 define AT_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/at/S99at $(TARGET_DIR)/etc/init.d/S99at
+endef
+
+define AT_INSTALL_INIT_SYSTEMD
+	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+	ln -sf ../../../../usr/lib/systemd/system/atd.service \
+		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/atd.service
 endef
 
 $(eval $(autotools-package))
