@@ -766,6 +766,7 @@ menu "Filesystem"
 	source "package/libfuse/Config.in"
 	source "package/liblockfile/Config.in"
 	source "package/libnfs/Config.in"
+	source "package/libnfsidmap/Config.in"
 	source "package/libsysfs/Config.in"
 	source "package/lockdev/Config.in"
 endmenu

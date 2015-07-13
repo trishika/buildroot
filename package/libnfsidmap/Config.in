@@ -1,0 +1,12 @@
+comment "libnfsidmap needs a toolchain w/ threads"
+	depends on BR2_USE_MMU
+	depends on !(BR2_TOOLCHAIN_HAS_THREADS || BR2_TOOLCHAIN_HAS_NATIVE_RPC)
+
+config BR2_PACKAGE_LIBNFSIDMAP
+	bool "libnfsidmap"
+	depends on BR2_TOOLCHAIN_HAS_NATIVE_RPC || BR2_TOOLCHAIN_HAS_THREADS # libtirpc
+	select BR2_PACKAGE_LIBTIRPC if !BR2_TOOLCHAIN_HAS_NATIVE_RPC
+	help
+	  The NFS idmap library
+
+	  http://www.citi.umich.edu/projects/nfsv4/linux/

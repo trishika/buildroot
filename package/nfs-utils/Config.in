@@ -32,6 +32,13 @@ config BR2_PACKAGE_NFS_UTILS_RPC_RQUOTAD
 	help
 	  NFS remote quota server
 
+config BR2_PACKAGE_NFSV4
+	bool "nfsv4"
+	select BR2_PACKAGE_LIBNFSIDMAP
+	select BR2_PACKAGE_LIBEVENT
+	help
+	  NFS v4 support
+
 endmenu
 
 endif

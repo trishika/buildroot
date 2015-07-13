@@ -15,11 +15,10 @@ NFS_UTILS_DEPENDENCIES = host-pkgconf
 NFS_UTILS_CONF_ENV = knfsd_cv_bsd_signals=no
 
 NFS_UTILS_CONF_OPTS = \
-	--disable-nfsv4 \
-	--disable-nfsv41 \
 	--disable-gss \
 	--disable-uuid \
 	--disable-ipv6 \
+	--disable-nfsdcltrack \
 	--without-tcp-wrappers \
 	--with-statedir=/run/nfs \
 	--with-rpcgen=internal
@@ -27,6 +26,17 @@ NFS_UTILS_CONF_OPTS = \
 NFS_UTILS_TARGETS_$(BR2_PACKAGE_NFS_UTILS_RPCDEBUG) += usr/sbin/rpcdebug
 NFS_UTILS_TARGETS_$(BR2_PACKAGE_NFS_UTILS_RPC_LOCKD) += usr/sbin/rpc.lockd
 NFS_UTILS_TARGETS_$(BR2_PACKAGE_NFS_UTILS_RPC_RQUOTAD) += usr/sbin/rpc.rquotad
+
+ifeq ($(BR2_PACKAGE_NFSV4),y)
+NFS_UTILS_CONF_OPTS += \
+	--enable-nfsv4 \
+	--enable-nfsv41
+NFS_UTILS_DEPENDENCIES += libevent libnfsidmap
+else
+NFS_UTILS_CONF_OPTS += \
+	--disable-nfsv4 \
+	--disable-nfsv41
+endif
 
 ifeq ($(BR2_PACKAGE_LIBTIRPC),y)
 NFS_UTILS_CONF_OPTS += --enable-tirpc
