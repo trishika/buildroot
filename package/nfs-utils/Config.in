@@ -15,6 +15,18 @@ config BR2_PACKAGE_NFS_UTILS
 
 if BR2_PACKAGE_NFS_UTILS
 
+menu "NFS options"
+
+config BR2_PACKAGE_NFSV4
+	bool "nfsv4"
+	select BR2_PACKAGE_LIBNFSIDMAP
+	select BR2_PACKAGE_LIBEVENT
+	select BR2_PACKAGE_LVM2_STANDARD_INSTALL
+	help
+	  NFS v4 support
+
+endmenu
+
 menu "NFS utilities selection"
 
 config BR2_PACKAGE_NFS_UTILS_RPCDEBUG
