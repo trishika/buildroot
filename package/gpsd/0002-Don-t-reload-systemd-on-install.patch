@@ -1,0 +1,32 @@
+From 65aa775d4c4e064ce5a358f4e90a4f11479e5cba Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Aur=C3=A9lien=20Chabot?= <aurelien@chabot.fr>
+Date: Tue, 14 Jul 2015 02:53:29 +0200
+Subject: [PATCH] Don't reload systemd on install
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Aurélien Chabot <aurelien@chabot.fr>
+---
+ SConstruct | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/SConstruct b/SConstruct
+index 5e4ef07..bf4e6b5 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -1856,12 +1856,7 @@ udev_install = Utility('udev-install', 'install', [
+     ] + hotplug_wrapper_install)
+
+ if env['systemd']:
+-    systemctl_daemon_reload = Utility('systemctl-daemon-reload', '', [ 'systemctl daemon-reload || true'])
+-    env.AlwaysBuild(systemctl_daemon_reload)
+-    env.Precious(systemctl_daemon_reload)
+     env.Requires(udev_install, systemd_install)
+-    env.Requires(systemctl_daemon_reload, systemd_install)
+-    env.Requires(udev_install, systemctl_daemon_reload)
+
+
+ Utility('udev-uninstall', '', [
+--
+2.4.5

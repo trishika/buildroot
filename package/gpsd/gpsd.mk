@@ -24,6 +24,12 @@ GPSD_SCONS_OPTS = \
 	strip=no\
 	python=no
 
+ifeq ($(BR2_PACKAGE_SYSTEMD),y)
+GPSD_SCONS_OPTS += systemd=yes
+else
+GPSD_SCONS_OPTS += systemd=no
+endif
+
 ifeq ($(BR2_PACKAGE_NCURSES),y)
 GPSD_DEPENDENCIES += ncurses
 else
@@ -220,6 +226,12 @@ endef
 define GPSD_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -D package/gpsd/S50gpsd $(TARGET_DIR)/etc/init.d/S50gpsd
 	$(SED) 's,^DEVICES=.*,DEVICES=$(BR2_PACKAGE_GPSD_DEVICES),' $(TARGET_DIR)/etc/init.d/S50gpsd
+endef
+
+define GPSD_INSTALL_INIT_SYSTEMD
+	mkdir -p $(TARGET_DIR)/etc/systemd/system/sockets.target.wants
+	ln -sf ../../../../lib/systemd/system/gpsd.socket \
+		$(TARGET_DIR)/etc/systemd/system/sockets.target.wants/gpsd.socket
 endef
 
 define GPSD_INSTALL_STAGING_CMDS

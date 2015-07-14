@@ -1,0 +1,30 @@
+From f0f0b456df8917533ec974f3ee6ff20c628f8668 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Aur=C3=A9lien=20Chabot?= <aurelien@chabot.fr>
+Date: Tue, 14 Jul 2015 03:26:54 +0200
+Subject: [PATCH] Don't remove write right on generated file
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Without write right, non-clean build failed because the file
+cannot be overwrite.
+
+Signed-off-by: Aurélien Chabot <aurelien@chabot.fr>
+---
+ SConstruct | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/SConstruct b/SConstruct
+index bf4e6b5..0e8470a 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -1264,7 +1264,6 @@ templated = [ x for x in templated if not x.startswith('debian/') ]
+
+ for fn in templated:
+     builder = env.Command(source=fn, target=fn[:-3], action=substituter)
+-    env.AddPostAction(builder, 'chmod -w $TARGET')
+     if fn.endswith(".py.in"):
+         env.AddPostAction(builder, 'chmod +x $TARGET')
+
+--
+2.4.5
