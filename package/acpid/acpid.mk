@@ -15,6 +15,14 @@ define ACPID_INSTALL_INIT_SYSV
 		$(TARGET_DIR)/etc/init.d/S02acpid
 endef
 
+define ACPID_INSTALL_INIT_SYSTEMD
+	$(INSTALL) -D -m 644 package/acpid/acpid.service \
+		$(TARGET_DIR)/usr/lib/systemd/system/acpid.service
+	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
+	ln -fs ../../../../usr/lib/systemd/system/acpid.service \
+		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/acpid.service
+endef
+
 define ACPID_SET_EVENTS
 	mkdir -p $(TARGET_DIR)/etc/acpi/events
 	printf "event=button[ /]power\naction=/sbin/poweroff\n" \
