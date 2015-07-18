@@ -16,6 +16,18 @@ MDADM_MAKE_OPTS = \
 MDADM_INSTALL_TARGET_OPTS = \
 	DESTDIR=$(TARGET_DIR)/usr -C $(MDADM_DIR) install-mdadm
 
+ifeq ($(BR2_PACKAGE_SYSTEMD),y)
+MDADM_INSTALL_TARGET_OPTS += \
+	SYSTEMD_DIR=/lib/systemd/system install-systemd-mdadm \
+	UDEVDIR=/lib/udev install-udev
+endif
+
+define MDADM_INSTALL_INIT_SYSTEMD
+	#mkdir -p $(TARGET_DIR)/etc/systemd/system/
+	#ln -sf ../../../../lib/systemd/system-shutdown/mdadm.shutdown \
+	#	$(TARGET_DIR)/etc/systemd/system/mdadm.shutdown
+endef
+
 define MDADM_CONFIGURE_CMDS
 	# Do nothing
 endef

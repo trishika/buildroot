@@ -1,0 +1,62 @@
+From dfd5b21e17ff549d1c71ace6283298bac6dd40ee Mon Sep 17 00:00:00 2001
+From: Christophe Vu-Brugier <cvubrugier@lacie.com>
+Date: Wed, 6 Mar 2013 16:03:14 +0100
+Subject: [PATCH] Separate install targets for mdadm and mdmon
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Christophe Vu-Brugier <cvubrugier@lacie.com>
+Signed-off-by: Aurélien Chabot <aurelien@chabot.fr>
+---
+ Makefile | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index a7d8c5c..69f479f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -258,8 +258,12 @@ $(MON_OBJS) : $(INCL) mdmon.h
+ sha1.o : sha1.c sha1.h md5.h
+	$(CC) $(CFLAGS) -DHAVE_STDINT_H -o sha1.o -c sha1.c
+
+-install : mdadm mdmon install-man install-udev
++install : install-mdadm install-mdmon install-man install-udev
++
++install-mdadm :
+	$(INSTALL) -D $(STRIP) -m 755 mdadm $(DESTDIR)$(BINDIR)/mdadm
++
++install-mdmon :
+	$(INSTALL) -D $(STRIP) -m 755 mdmon $(DESTDIR)$(BINDIR)/mdmon
+
+ install-static : mdadm.static install-man
+@@ -288,9 +292,9 @@ install-udev: udev-md-raid-arrays.rules udev-md-raid-assembly.rules
+	   rm -f .install.tmp.1; \
+	done
+
+-install-systemd: systemd/mdmon@.service
+-	@for file in mdmon@.service mdmonitor.service mdadm-last-resort@.timer \
+-		mdadm-last-resort@.service mdadm-grow-continue@.service; \
++install-systemd-mdadm:
++	@for file in mdadm-last-resort@.timer mdadm-last-resort@.service \
++		mdadm-grow-continue@.service; \
+	do sed -e 's,BINDIR,$(BINDIR),g' systemd/$$file > .install.tmp.2 && \
+	   echo $(INSTALL) -D -m 644 systemd/$$file $(DESTDIR)$(SYSTEMD_DIR)/$$file ; \
+	   $(INSTALL) -D -m 644 .install.tmp.2 $(DESTDIR)$(SYSTEMD_DIR)/$$file ; \
+@@ -304,6 +308,14 @@ install-systemd: systemd/mdmon@.service
+	done
+	if [ -f /etc/SuSE-release -o -n "$(SUSE)" ] ;then $(INSTALL) -D -m 755 systemd/SUSE-mdadm_env.sh $(DESTDIR)$(SYSTEMD_DIR)/../scripts/mdadm_env.sh ;fi
+
++install-systemd-mdmon: systemd/mdmon@.service
++	@for file in mdmon@.service mdmonitor.service \
++	do sed -e 's,BINDIR,$(BINDIR),g' systemd/$$file > .install.tmp.2 && \
++	   echo $(INSTALL) -D -m 644 systemd/$$file $(DESTDIR)$(SYSTEMD_DIR)/$$file ; \
++	   $(INSTALL) -D -m 644 .install.tmp.2 $(DESTDIR)$(SYSTEMD_DIR)/$$file ; \
++	   rm -f .install.tmp.2; \
++	done
++
+ uninstall:
+	rm -f $(DESTDIR)$(MAN8DIR)/mdadm.8 $(DESTDIR)$(MAN8DIR)/mdmon.8 $(DESTDIR)$(MAN4DIR)/md.4 $(DESTDIR)$(MAN5DIR)/mdadm.conf.5 $(DESTDIR)$(BINDIR)/mdadm
+
+--
+2.4.6
