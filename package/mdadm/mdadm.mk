@@ -28,6 +28,12 @@ define MDADM_INSTALL_INIT_SYSTEMD
 	#	$(TARGET_DIR)/etc/systemd/system/mdadm.shutdown
 endef
 
+define MDADM_INSTALL_CONF
+	$(INSTALL) -D -m 644 $(@D)/mdadm.conf-example $(TARGET_DIR)/etc/mdadm.conf
+endef
+
+MDADM_POST_INSTALL_TARGET_HOOKS += MDADM_INSTALL_CONF
+
 define MDADM_CONFIGURE_CMDS
 	# Do nothing
 endef
